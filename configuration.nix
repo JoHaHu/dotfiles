@@ -25,7 +25,7 @@
   users.users.johannes = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "wireshark" ];
-    shell = pkgs.zsh;
+    shell = pkgs.nushell;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAqstP7+u9sbYgtf1IMyfGICccIecL3XNdKn9w0FddgN cardno:15_286_920"
     ];
@@ -35,7 +35,12 @@
   users.defaultUserShell = pkgs.zsh;
 
 
-
+  fonts.packages = with pkgs; [
+    noto-fonts
+    fira-code
+    fira-code-symbols
+    nerdfonts
+  ];
 
   programs.fuse.userAllowOther = true;
 
@@ -48,11 +53,9 @@
       git
       tmux
       zsh
-      mako
       pipewire
-      swaybg
-      swayidle
       wireplumber
+      vulkan-validation-layers
     ];
   };
 
@@ -75,6 +78,7 @@
     sudo.extraConfig = ''
       Defaults lecture = never
     '';
+    pam.services.swaylock = { };
   };
 
   programs.zsh = {

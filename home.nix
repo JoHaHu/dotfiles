@@ -13,11 +13,16 @@
     vscode
     tree
     firefox
-    alacritty
     nushell
     eza
     ripgrep
+    skim
     tor-browser
+    mako
+    wl-clipboard
+    swaylock
+    swayidle
+    neovim
   ];
 
   home.file = { };
@@ -38,9 +43,7 @@
         ".ssh"
         ".mozilla"
       ];
-      files = [
-        ".zsh_history"
-      ];
+      files = [];
       allowOther = true;
     };
   };
@@ -52,6 +55,26 @@
   programs.home-manager.enable = true;
 
   programs = {
+    zathura.enable = true;
+    alacritty.enable = true;
+    starship = {
+      enable = true;
+      settings = {
+        cmd_duration.disabled = true;
+      };
+    };
+    eza = {
+      enable = true;
+      enableNushellIntegration = true;
+    };
+    nushell = {
+      enable = true;
+      extraConfig = ''
+      $env.config = {
+        show_banner: false
+      }
+      '';
+    };
     git = {
       enable = true;
       extraConfig = {
@@ -70,6 +93,7 @@
     waybar = {
       enable = true;
       systemd.enable = true;
+      systemd.target = "sway-session.target";
     };
 
     vscode = {
@@ -86,10 +110,19 @@
 
   wayland.windowManager.sway = {
     enable = true;
+    wrapperFeatures.gtk = true;
+    systemd = {
+      enable = true;
+      xdgAutostart = true;
+    };
+    swaynag = {
+      enable = true;
+    };
   };
 
   services = {
     swayidle.enable = true;
+    swayidle.systemdTarget = "sway-session.target";
   };
 
 }
