@@ -37,10 +37,10 @@
 
 
 
-  programs.fuse.userAllowOther = true; 
+  programs.fuse.userAllowOther = true;
 
   environment = {
-    pathsToLink = ["/share/zsh"];  
+    pathsToLink = [ "/share/zsh" ];
     systemPackages = with pkgs; [
       emacs
       vim
@@ -50,29 +50,44 @@
       zsh
       mako
       pipewire
+      swaybg
+      swayidle
+      wireplumber
     ];
   };
 
-  services.gnome.gnome-keyring.enable = true;
-  security ={
+
+  services = {
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      pulse.enable = true;
+      wireplumber.enable = true;
+    };
+    openssh.enable = true;
+    gnome.gnome-keyring.enable = true;
+    blueman.enable = true;
+  };
+
+  security = {
+    rtkit.enable = true;
     polkit.enable = true;
     sudo.extraConfig = ''
-    Defaults lecture = never
+      Defaults lecture = never
     '';
   };
-  
+
   programs.zsh = {
-    enable = true; 
+    enable = true;
   };
 
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
   };
-  
+
   programs.sway.enable = true;
 
-  services.openssh.enable = true;
 
   system.stateVersion = "23.11"; # Did you read the comment?
 

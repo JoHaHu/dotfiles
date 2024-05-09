@@ -9,40 +9,40 @@
       (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd = { 
-   availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
-   kernelModules = [ ];
-   systemd = { 
-     enable = true;
-     enableTpm2 = true;
-     services.rollback = {
-       description = "Rollback BTRFS root subvolume to a pristine state";
-       wantedBy = [
-         "initrd.target"
-       ];
-       after = [
-         # LUKS/TPM process
-         "systemd-cryptsetup@crypt_root.service"
-       ];
-       before = [
-         "sysroot.mount"
-       ];
-       unitConfig.DefaultDependencies = "no";
-       serviceConfig.Type = "oneshot";
-       script = ''
-         mkdir /btrfs_tmp
-         mount -o subvolid=5 /dev/mapper/crypt_root /btrfs_tmp
-         if [[ -e /btrfs_tmp/root ]]; then
-           mkdir -p /btrfs_tmp/old_roots
-           timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%d_%H:%M:%S")
-           mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
-         fi   
-         btrfs subvolume create /btrfs_tmp/root
-         umount /btrfs_tmp
-         rmdir /btrfs_tmp
+  boot.initrd = {
+    availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
+    kernelModules = [ ];
+    systemd = {
+      enable = true;
+      enableTpm2 = true;
+      services.rollback = {
+        description = "Rollback BTRFS root subvolume to a pristine state";
+        wantedBy = [
+          "initrd.target"
+        ];
+        after = [
+          # LUKS/TPM process
+          "systemd-cryptsetup@crypt_root.service"
+        ];
+        before = [
+          "sysroot.mount"
+        ];
+        unitConfig.DefaultDependencies = "no";
+        serviceConfig.Type = "oneshot";
+        script = ''
+          mkdir /btrfs_tmp
+          mount -o subvolid=5 /dev/mapper/crypt_root /btrfs_tmp
+          if [[ -e /btrfs_tmp/root ]]; then
+            mkdir -p /btrfs_tmp/old_roots
+            timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%d_%H:%M:%S")
+            mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
+          fi   
+          btrfs subvolume create /btrfs_tmp/root
+          umount /btrfs_tmp
+          rmdir /btrfs_tmp
         '';
-     };
-   };
+      };
+    };
 
   };
 
@@ -75,12 +75,12 @@
   #     options = [ "subvol=home" "compress=zstd" ];
   #   };
 
-  fileSystems."/home" = {
-      device = "none";
-      fsType = "tmpfs";
-      options = ["defaults" "size=50%" "mode=700"];
-      neededForBoot = true;  
-};
+  #fileSystems."/home" = {
+  #    device = "none";
+  #    fsType = "tmpfs";
+  #    options = ["defaults" "size=50%" "mode=700"];
+  #neededForBoot = true;  
+  #};
 
   fileSystems."/boot" =
     {
@@ -116,4 +116,7 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
 }

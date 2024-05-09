@@ -1,6 +1,6 @@
 { inputs, outputs, config, pkgs, impermanence, ... }:
 {
-  imports = [ 
+  imports = [
     impermanence.nixosModules.home-manager.impermanence
   ];
 
@@ -17,27 +17,26 @@
     nushell
     eza
     ripgrep
+    tor-browser
   ];
-  
-  home.file = {
-   
-  };
+
+  home.file = { };
 
   home.shellAliases = {
-      "ll" = "ls -l";
-      "ls" = "eza";
-    };  
+    "ll" = "ls -l";
+    "ls" = "eza";
+  };
 
   home.persistence = {
     "/persistent/home/johannes" = {
       directories = [
-          "Documents"
-          "Downloads"
-          "code"
-          ".cache/mozilla/firefox"
-          ".gnupg" 
-          ".ssh"
- 	        ".mozilla"
+        "Documents"
+        "Downloads"
+        "code"
+        ".cache/mozilla/firefox"
+        ".gnupg"
+        ".ssh"
+        ".mozilla"
       ];
       files = [
         ".zsh_history"
@@ -49,32 +48,48 @@
   home.sessionVariables = {
     EDITOR = "emacs";
   };
-  
+
   programs.home-manager.enable = true;
 
-  programs.git = {
-    enable = true;
-    extraConfig = {
-
+  programs = {
+    git = {
+      enable = true;
+      extraConfig = {
+        init = {
+          defaultBranch = "main";
+        };
+      };
+      userEmail = "mail@johupe.com";
+      userName = "Johannes HUpe";
+      signing = {
+        key = "2B5EFAD1B03F7EEC301187D58AD559B9260504DC";
+        signByDefault = true;
+      };
     };
-    userEmail = "mail@johupe.com";
-    userName = "Johannes HUpe";
-    signing = {
-      key = "2B5EFAD1B03F7EEC301187D58AD559B9260504DC";
-      signByDefault = true;
+
+    waybar = {
+      enable = true;
+      systemd.enable = true;
+    };
+
+    vscode = {
+      enable = true;
+      extensions = with pkgs.vscode-extensions; [
+        bbenoist.nix
+      ];
+    };
+
+    zsh = {
+      enable = true;
     };
   };
 
-  programs.vscode = {
+  wayland.windowManager.sway = {
     enable = true;
-    extensions = with pkgs.vscode-extensions; [
-      bbenoist.nix
-    ];
   };
 
-  programs.zsh = {
-    enable = true; 
+  services = {
+    swayidle.enable = true;
   };
-
 
 }

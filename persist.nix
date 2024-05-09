@@ -1,5 +1,5 @@
 {
-  environment.persistence = { 
+  environment.persistence = {
     "/persistent" = {
       hideMounts = true;
       directories = [
