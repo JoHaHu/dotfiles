@@ -39,7 +39,7 @@
           ".ssh"
  	        ".mozilla"
       ];
-      file = [
+      files = [
         ".zsh_history"
       ];
       allowOther = true;
