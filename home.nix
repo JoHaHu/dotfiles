@@ -54,10 +54,13 @@
 
   programs.git = {
     enable = true;
+    extraConfig = {
+
+    };
     userEmail = "mail@johupe.com";
     userName = "Johannes HUpe";
     signing = {
-      key = "";
+      key = "2B5EFAD1B03F7EEC301187D58AD559B9260504DC";
       signByDefault = true;
     };
   };
